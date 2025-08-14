@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>"หลาน" บริการพาไปหาหมอ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body { 
+      font-family: 'Prompt', sans-serif; 
+      background: #f8fafc; 
+      margin: 0; 
+      padding: 0;
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    .container {
+      width: 100vw;
+      min-height: 100vh;
+      background: white;
+      overflow-x: hidden;
+    }
+
+    .header { 
+      background: linear-gradient(135deg, #113a69, #1e5a96); 
+      color: white; 
+      text-align: center; 
+      padding: 30px 20px; 
+      font-size: 28px; 
+      font-weight: 700; 
+      box-shadow: 0 2px 10px rgba(17,58,105,0.2);
+      position: relative;
+    }
+
+    /* ปุ่มตรวจสอบสถานะที่ banner */
+    .status-btn-header {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-btn-header:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .status-btn-header:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    /* หน้าแรก - แสดงแพกเกจ 3 กล่อง */
+    .landing-section {
+      padding: 30px 20px 40px 20px;
+    }
+
+    .packages-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .package-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .package-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(17,58,105,0.15);
+      border-color: #113a69;
+    }
+
+    .package-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .package-title {
+      color: #113a69;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 15px 0;
+      line-height: 1.3;
+    }
+
+    .package-price {
+      background: linear-gradient(135deg, #113a69, #1e5a96);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .package-features {
+      margin: 25px 0;
+    }
+
+    .package-features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .package-features li {
+      padding: 12px 0;
+      font-size: 16px;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .package-features li:last-child {
+      border-bottom: none;
+    }
+
+    .package-features li span {
+      margin-right: 12px;
+      font-size: 18px;
+    }
+
+    .package-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #113a69, #1e5a96);
+      color: white;
+      padding: 18px;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(17,58,105,0.3);
+      margin-top: 20px;
+    }
+
+    .package-btn:hover, .package-btn:active {
+      background: linear-gradient(135deg, #0e3058, #1a4d7a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(17,58,105,0.4);
+    }
+
+    /* แยกสีแพกเกจ */
+    .package-card.package-1 .package-btn {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      box-shadow: 0 4px 15px rgba(220,38,38,0.3);
+    }
+
+    .package-card.package-1 .package-btn:hover {
+      background: linear-gradient(135deg, #b91c1c, #991b1b);
+      box-shadow: 0 6px 20px rgba(220,38,38,0.4);
+    }
+
+    .package-card.package-1:hover {
+      border-color: #dc2626;
+    }
+
+    .package-card.package-1 .package-price {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .package-card.package-2 .package-btn {
+      background: linear-gradient(135deg, #059669, #047857);
+      box-shadow: 0 4px 15px rgba(5,150,105,0.3);
+    }
+
+    .package-card.package-2 .package-btn:hover {
+      background: linear-gradient(135deg, #047857, #065f46);
+      box-shadow: 0 6px 20px rgba(5,150,105,0.4);
+    }
+
+    .package-card.package-2:hover {
+      border-color: #059669;
+    }
+
+    .package-card.package-2 .package-price {
+      background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    .package-card.package-3 .package-btn {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+    }
+
+    .package-card.package-3 .package-btn:hover {
+      background: linear-gradient(135deg, #6d28d9, #5b21b6);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+    }
+
+    .package-card.package-3:hover {
+      border-color: #7c3aed;
+    }
+
+    .package-card.package-3 .package-price {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    }
+
+    /* ฟอร์มจอง - ซ่อนไว้เริ่มต้น */
+    .booking-form, .status-check, .status-result {
+      display: none;
+    }
+
+    .booking-form.show, .status-check.show, .status-result.show {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-btn {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      margin: 20px;
+      font-size: 16px;
+      font-family: 'Prompt', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #4b5563;
+    }
+
+    .form-section {
+      background: white;
+      margin: 25px 20px;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+      color: #1a202c;
+      margin: 0 0 25px 0;
+      font-size: 22px;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-number {
+      background: #113a69;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* แสดงแพกเกจที่เลือกในฟอร์ม */
+    .selected-package-display {
+      background: #f0f9ff;
+      border: 2px solid #e0f2fe;
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .selected-package-display h4 {
+      color: #113a69;
+      margin: 0 0 15px 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .selected-package-display .package-description {
+      color: #0c4a6e;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      color: #374151;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 18px;
+      border-radius: 14px;
+      border: 2px solid #e5e7eb;
+      font-size: 18px;
+      font-family: 'Prompt', sans-serif;
+      transition: all 0.3s ease;
+      background: #fafbfc;
+      min-height: 56px;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #113a69;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(17,58,105,0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Relation chips */
+    .relation-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .relation-options input[type="radio"] {
+      display: none;
+    }
+
+    .relation-options label {
+      padding: 16px 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      color: #4b5563;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      user-select: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+    }
+
+    .relation-options input[type="radio"]:checked + label {
+      background: #113a69;
+      color: white;
+      border-color: #113a69;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(17,58,105,0.3);
+    }
+
+    .datetime-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .datetime-field {
+      position: relative;
+    }
+
+    .datetime-field input {
+      padding-left: 60px;
+      cursor: pointer;
+    }
+
+    .datetime-field::before {
+      content: attr(data-icon);
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #113a69;
+      font-size: 24px;
+      z-index: 1;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 20px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      text-align: center;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+      font-size: 16px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .file-input-label:hover {
+      border-color: #113a69;
+      background: #f1f5f9;
+    }
+
+    .submit-btn {
+      width: calc(100% - 40px);
+      background: linear-gradient(135deg, #113a69, #1e5a96);
+      color: white;
+      padding: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      margin: 40px 20px 30px 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(17,58,105,0.3);
+      position: sticky;
+      bottom: 20px;
+      z-index: 100;
+      min-height: 68px;
+    }
+
+    .submit-btn:hover, .submit-btn:active {
+      background: linear-gradient(135deg, #0e3058, #1a4d7a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(17,58,105,0.4);
+    }
+
+    .submit-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Status Check Styles */
+    .status-check-form {
+      background: white;
+      margin: 25px 20px;
+      padding: 40px 25px;
+      border-radius: 20px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .status-check-form h3 {
+      color: #113a69;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .phone-input-wrapper {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .phone-input-wrapper input {
+      padding-left: 60px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .phone-input-wrapper::before {
+      content: "📱";
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      z-index: 1;
+    }
+
+    /* Status Result Styles */
+    .status-card {
+      background: white;
+      margin: 25px 20px;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .status-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .status-header h3 {
+      color: #113a69;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .status-confirmed { background: #d1fae5; color: #065f46; }
+    .status-assigned { background: #fef3c7; color: #92400e; }
+    .status-in-progress { background: #dbeafe; color: #1e40af; }
+    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+    .booking-details {
+      margin-top: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: #6b7280;
+      font-size: 16px;
+      font-weight: 500;
+      flex-shrink: 0;
+      min-width: 120px;
+    }
+
+    .detail-value {
+      color: #111827;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .driver-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 2px solid #e2e8f0;
+    }
+
+    .driver-card h4 {
+      color: #113a69;
+      margin: 0 0 15px 0;
+      font-size: 18px;
+    }
+
+    .driver-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .driver-avatar {
+      width: 50px;
+      height: 50px;
+      background: #113a69;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .driver-details h5 {
+      margin: 0;
+      color: #374151;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .driver-phone {
+      color: #10b981;
+      font-size: 16px;
+      font-weight: 600;
+      margin: 5px 0 0 0;
+    }
+
+    .call-driver-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .call-driver-btn:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+    }
+
+    .no-booking {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+
+    .no-booking-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+      color: #113a69;
+      background: white;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .success-message.show {
+      display: flex;
+    }
+
+    .success-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      color: #10b981;
+    }
+
+    .success-text {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .order-id {
+      font-size: 18px;
+      color: #113a69;
+      background: #f0f9ff;
+      padding: 20px 25px;
+      border-radius: 16px;
+      margin: 25px 0;
+      font-weight: 600;
+      border: 2px solid #e0f2fe;
+      text-align: center;
+    }
+
+    /* Loading state */
+    .loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Error states */
+    .error {
+      border-color: #ef4444 !important;
+      background: #fef2f2 !important;
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+      font-weight: 500;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media screen and (min-width: 768px) {
+      .packages-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .relation-options {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .datetime-wrapper {
+        grid-template-columns: 1fr;
+      }
+      
+      .relation-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .package-card {
+        padding: 25px 20px;
+      }
+      
+      .package-title {
+        font-size: 20px;
+      }
+
+      .status-btn-header {
+        left: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      .header {
+        font-size: 24px;
+        padding: 25px 15px 25px 120px;
+      }
+    }
+
+    /* Hide sections */
+    .landing-section.hide, .booking-form.hide, .status-check.hide, .status-result.hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="status-btn-header" onclick="showStatusCheck()">
+        🔍 <span>ตรวจสอบสถานะ</span>
+      </button>
+      บริการ "หลาน" พาไปหาหมอ
+    </div>
+
+    <!-- หน้าแรก - แสดงแพกเกจ 3 กล่อง -->
+    <div class="landing-section" id="landingSection">
+      <div class="packages-container">
+        
+        <!-- Package 1 -->
+        <div class="package-card package-1">
+          <div class="package-header">
+            <h3 class="package-title">Package 1: หลานขับ + หลานแคร์<br>ดูแลตลอด 6 ชั่วโมง</h3>
+            <div class="package-price">บริการครบวงจร</div>
+          </div>
+          <div class="package-features">
+            <ul>
+              <li><span>🏥</span> รับ-ส่ง ไปโรงพยาบาล</li>
+              <li><span>👩‍⚕️</span> มีผู้ช่วยดูแล(หลานแคร์)</li>
+              <li><span>🍛</span> พาไปรับประทานอาหาร</li>
+              <li><span>💊</span> พาไปจ่ายเงินและรับยา</li>
+            </ul>
+          </div>
+          <button class="package-btn" onclick="selectPackage('package1')">
+            📝 จองบริการนี้
+          </button>
+        </div>
+
+        <!-- Package 2 -->
+        <div class="package-card package-2">
+          <div class="package-header">
+            <h3 class="package-title">Package 2: หลานแคร์<br>ดูแลตลอด 6 ชั่วโมง</h3>
+            <div class="package-price">บริการดูแลเฉพาะ</div>
+          </div>
+          <div class="package-features">
+            <ul>
+              <li><span>🏥</span> คนดูแลรอพบ ณ โรงพยาบาล</li>
+              <li><span>👩‍⚕️</span> ช่วยดูแลประสานงานใน รพ.</li>
+              <li><span>🍛</span> แยกย้ายกลับบ้าน</li>
+            </ul>
+          </div>
+          <button class="package-btn" onclick="selectPackage('package2')">
+            📝 จองบริการนี้
+          </button>
+        </div>
+
+        <!-- Package 3 -->
+        <div class="package-card package-3">
+          <div class="package-header">
+            <h3 class="package-title">Package 3: หลานขับ<br>รอรับ-ส่ง ภายใน 8 ชั่วโมง</h3>
+            <div class="package-price">บริการรถรับส่ง</div>
+          </div>
+          <div class="package-features">
+            <ul>
+              <li><span>🏥</span> คนขับไปรับที่บ้านพาไปโรงพยาบาล</li>
+              <li><span>👩‍⚕️</span> รอผู้สูงอายุ/ผู้ป่วย</li>
+              <li><span>🍛</span> คนขับไปส่งบ้าน</li>
+            </ul>
+          </div>
+          <button class="package-btn" onclick="selectPackage('package3')">
+            📝 จองบริการนี้
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ฟอร์มจอง -->
+    <div class="booking-form" id="bookingForm">
+      <button class="back-btn" onclick="showLandingPage()">← กลับหน้าแรก</button>
+
+      <form id="actualBookingForm" netlify netlify-honeypot="bot-field" name="wheelchair-booking">
+        <!-- Hidden fields for Netlify -->
+        <input type="hidden" name="form-name" value="wheelchair-booking">
+        <p style="display: none;">
+          <label>Don't fill this out if you're human: <input name="bot-field"></label>
+        </p>
+        <input type="hidden" id="orderId" name="orderId">
+        <input type="hidden" id="selectedPackage" name="package">
+
+        <!-- แสดงแพกเกจที่เลือก -->
+        <div class="form-section">
+          <div class="selected-package-display" id="packageDisplay">
+            <h4 id="selectedPackageTitle">แพกเกจที่เลือก</h4>
+            <div class="package-description" id="selectedPackageDescription">
+              <!-- จะถูกเติมข้อมูลด้วย JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. ข้อมูลผู้จอง -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <span class="section-number">1</span>
+            ข้อมูลผู้จองบริการ
+          </h3>
+          
+          <div class="form-group">
+            <label>ชื่อ-นามสกุลผู้จอง *</label>
+            <input type="text" name="customerName" placeholder="กรุณากรอกชื่อ-นามสกุล" required>
+            <div class="error-message">กรุณากรอกชื่อ-นามสกุล</div>
+          </div>
+
+          <div class="form-group">
+            <label>เบอร์โทรติดต่อ *</label>
+            <input type="tel" name="customerPhone" placeholder="0XX-XXX-XXXX" required>
+            <div class="error-message">กรุณากรอกเบอร์โทรติดต่อ</div>
+          </div>
+
+          <div class="form-group">
+            <label>ความสัมพันธ์กับผู้สูงอายุ *</label>
+            <div class="relation-options">
+              <input type="radio" id="self" name="relation" value="ตนเอง" required><label for="self">ตนเอง</label>
+              <input type="radio" id="child" name="relation" value="บุตร"><label for="child">บุตร</label>
+              <input type="radio" id="father" name="relation" value="บิดา"><label for="father">บิดา</label>
+              <input type="radio" id="mother" name="relation" value="มารดา"><label for="mother">มารดา</label>
+              <input type="radio" id="spouse" name="relation" value="คู่สมรส"><label for="spouse">คู่สมรส</label>
+              <input type="radio" id="relative" name="relation" value="ญาติ"><label for="relative">ญาติ</label>
+              <input type="radio" id="friend" name="relation" value="เพื่อน"><label for="friend">เพื่อน</label>
+              <input type="radio" id="other" name="relation" value="อื่นๆ"><label for="other">อื่นๆ</label>
+            </div>
+            <div class="error-message">กรุณาเลือกความสัมพันธ์</div>
+          </div>
+        </div>
+
+        <!-- 2. ข้อมูลผู้สูงอายุ -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <span class="section-number">2</span>
+            ข้อมูลผู้สูงอายุ/ผู้ป่วย
+          </h3>
+          
+          <div class="form-group">
+            <label>ชื่อ-นามสกุลผู้สูงอายุ *</label>
+            <input type="text" name="patientName" placeholder="กรุณากรอกชื่อ-นามสกุล" required>
+            <div class="error-message">กรุณากรอกชื่อ-นามสกุลผู้สูงอายุ</div>
+          </div>
+
+          <div class="datetime-wrapper">
+            <div class="form-group">
+              <label>อายุ *</label>
+              <input type="number" name="patientAge" placeholder="ปี" min="1" max="120" required>
+              <div class="error-message">กรุณากรอกอายุ</div>
+            </div>
+            
+            <div class="form-group">
+              <label>เพศ *</label>
+              <select name="patientGender" required>
+                <option value="">เลือกเพศ</option>
+                <option value="ชาย">ชาย</option>
+                <option value="หญิง">หญิง</option>
+              </select>
+              <div class="error-message">กรุณาเลือกเพศ</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>โรคประจำตัว/ภาวะสุขภาพ</label>
+            <textarea name="patientHealth" placeholder="ระบุโรคประจำตัวหรือภาวะสุขภาพที่ควรทราบ (ถ้ามี)"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. รายละเอียดการนัดหมาย -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <span class="section-number">3</span>
+            รายละเอียดการนัดหมาย
+          </h3>
+          
+          <div class="form-group">
+            <label>จุดรับ *</label>
+            <input type="text" name="pickupLocation" placeholder="ที่อยู่จุดรับ" required>
+            <div class="error-message">กรุณากรอกจุดรับ</div>
+          </div>
+
+          <div class="form-group">
+            <label>จุดส่ง/ชื่อโรงพยาบาล *</label>
+            <input type="text" name="dropLocation" placeholder="ชื่อโรงพยาบาลหรือจุดส่ง" required>
+            <div class="error-message">กรุณากรอกจุดส่ง</div>
+          </div>
+
+          <div class="form-group">
+            <label>หมายเหตุจุดรับ</label>
+            <textarea name="pickupNote" placeholder="เช่น บ้านอยู่ชั้นสูง ไม่มีลิฟท์ ต้องเดินขึ้นบันได ฯลฯ"></textarea>
+          </div>
+
+          <div class="datetime-wrapper">
+            <div class="datetime-field" data-icon="📅">
+              <label>วันที่นัด *</label>
+              <input type="text" id="appointmentDate" name="appointmentDate" placeholder="เลือกวันที่" required readonly>
+              <div class="error-message">กรุณาเลือกวันที่</div>
+            </div>
+            <div class="datetime-field" data-icon="⏰">
+              <label>เวลานัด *</label>
+              <input type="text" id="appointmentTime" name="appointmentTime" placeholder="เลือกเวลา" required readonly>
+              <div class="error-message">กรุณาเลือกเวลา</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>อัปโหลดใบนัดแพทย์ (ถ้ามี)</label>
+            <div class="file-input-wrapper">
+              <input type="file" id="appointmentFile" name="appointmentFile" accept=".jpg,.jpeg,.png,.pdf">
+              <label for="appointmentFile" class="file-input-label">
+                📎 แตะเพื่อเลือกไฟล์<br>
+                <small>รองรับ JPG, PNG, PDF</small>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">ส่งข้อมูลการจอง</button>
+      </form>
+    </div>
+
+    <!-- หน้าตรวจสอบสถานะ -->
+    <div class="status-check" id="statusCheck">
+      <button class="back-btn" onclick="showLandingPage()">← กลับหน้าแรก</button>
+      
+      <div class="status-check-form">
+        <h3>🔍 ตรวจสอบสถานะการจอง</h3>
+        <p style="color: #6b7280; margin-bottom: 30px;">กรอกเบอร์โทรศัพท์ที่ใช้ในการจอง</p>
+        
+        <div class="phone-input-wrapper">
+          <input type="tel" id="statusPhoneInput" placeholder="0XX-XXX-XXXX" maxlength="15">
+          <div class="error-message">กรุณากรอกเบอร์โทรศัพท์</div>
+        </div>
+        
+        <button class="submit-btn" onclick="checkBookingStatus()" style="position: relative; margin: 20px;">
+          ตรวจสอบสถานะ
+        </button>
+      </div>
+    </div>
+
+    <!-- หน้าแสดงผลสถานะ -->
+    <div class="status-result" id="statusResult">
+      <button class="back-btn" onclick="showStatusCheck()">← กลับตรวจสอบสถานะ</button>
+      
+      <div id="statusContent">
+        <!-- จะถูกเติมข้อมูลด้วย JavaScript -->
+      </div>
+    </div>
+
+    <!-- หน้า Success -->
+    <div class="success-message" id="successMessage">
+      <div class="success-icon">✅</div>
+      <div class="success-text">จองเรียบร้อยแล้ว!</div>
+      <div>ใช้เบอร์โทรศัพท์ในการตรวจสอบสถานะการจอง</div>
+      <div class="order-id" id="showOrderId"></div>
+      <div style="color: #64748b; font-size: 16px; margin-top: 25px;">
+        💡 กรุณาจดจำเบอร์โทรศัพท์ที่ใช้จองไว้<br>
+        สำหรับการติดตามสถานะการจอง
+      </div>
+      <button class="booking-btn" onclick="location.reload()" style="margin-top: 30px; background: linear-gradient(135deg, #113a69, #1e5a96); color: white; padding: 20px 40px; border: none; border-radius: 16px; font-size: 18px; font-weight: 600; cursor: pointer;">
+        🏠 กลับหน้าแรก
+      </button>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Package data
+    const packageData = {
+      package1: {
+        title: "Package 1: หลานขับ + หลานแคร์ ดูแลตลอด 6 ชั่วโมง",
+        description: "🚗👩‍⚕️ คนดูแลไปรับที่บ้านพร้อมคนขับ + พาไปโรงพยาบาล + คนดูแลพากลับบ้านพร้อมคนขับ ด้วยรถยนต์"
+      },
+      package2: {
+        title: "Package 2: หลานแคร์ ดูแลตลอด 6 ชั่วโมง",
+        description: "👩‍⚕️ คนดูแล รอเจอ ณ โรงพยาบาล + ช่วยประสานงานใน รพ."
+      },
+      package3: {
+        title: "Package 3: หลานขับ รอรับ-ส่ง ภายใน 8 ชั่วโมง",
+        description: "🚗 คนขับไปรับที่บ้านพาไปโรงพยาบาล + รอรับ + คนขับไปส่งกลับบ้าน ด้วยรถยนต์"
+      }
+    };
+
+    // Config - แก้ไข URL เหล่านี้ให้ตรงกับ Google Apps Script ของคุณ
+    const CONFIG = {
+      BOOKING_SCRIPT_URL: "https://script.google.com/macros/s/YOUR_BOOKING_SCRIPT_ID/exec",
+      STATUS_SCRIPT_URL: "https://script.google.com/macros/s/YOUR_STATUS_SCRIPT_ID/exec"
+    };
+
+    // ฟังก์ชันเลือกแพกเกจ
+    function selectPackage(packageType) {
+      // เก็บข้อมูลแพกเกจที่เลือก
+      document.getElementById('selectedPackage').value = packageType;
+      
+      // อัปเดตการแสดงผลแพกเกจ
+      const titleElement = document.getElementById('selectedPackageTitle');
+      const descElement = document.getElementById('selectedPackageDescription');
+      
+      titleElement.textContent = packageData[packageType].title;
+      descElement.textContent = packageData[packageType].description;
+      
+      // แสดงฟอร์มจอง
+      showBookingForm();
+    }
+
+    // ฟังก์ชันสลับหน้า
+    function showBookingForm() {
+      hideAllSections();
+      document.getElementById('bookingForm').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showLandingPage() {
+      hideAllSections();
+      document.getElementById('landingSection').classList.remove('hide');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showStatusCheck() {
+      hideAllSections();
+      document.getElementById('statusCheck').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showStatusResult() {
+      hideAllSections();
+      document.getElementById('statusResult').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideAllSections() {
+      document.getElementById('landingSection').classList.add('hide');
+      document.getElementById('bookingForm').classList.remove('show');
+      document.getElementById('statusCheck').classList.remove('show');
+      document.getElementById('statusResult').classList.remove('show');
+      document.getElementById('successMessage').classList.remove('show');
+    }
+
+    function generateOrderId() {
+      const date = new Date();
+      const yyyymmdd = date.toISOString().slice(0,10).replace(/-/g,"");
+      const random = Math.floor(1000 + Math.random() * 9000);
+      return `LHAN-${yyyymmdd}-${random}`;
+    }
+
+    // ฟังก์ชันตรวจสอบสถานะการจอง
+    async function checkBookingStatus() {
+      const phone = document.getElementById('statusPhoneInput').value.trim();
+      
+      if (!phone) {
+        showPhoneError('กรุณากรอกเบอร์โทรศัพท์');
+        return;
+      }
+
+      // ล้างข้อผิดพลาดก่อนหน้า
+      clearPhoneError();
+
+      const submitBtn = event.target;
+      const originalText = submitBtn.textContent;
+      
+      // แสดง loading state
+      submitBtn.textContent = 'กำลังตรวจสอบ...';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+
+      try {
+        const response = await fetch(`${CONFIG.STATUS_SCRIPT_URL}?phone=${encodeURIComponent(phone)}`);
+        const data = await response.json();
+
+        if (data.status === 'success' && data.booking) {
+          displayBookingStatus(data.booking);
+          showStatusResult();
+        } else {
+          displayNoBookingFound();
+          showStatusResult();
+        }
+      } catch (error) {
+        console.error('Error checking status:', error);
+        alert('เกิดข้อผิดพลาดในการตรวจสอบสถานะ\nกรุณาลองใหม่อีกครั้ง');
+      } finally {
+        // คืนสถานะปุ่ม
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }
+    }
+
+    function showPhoneError(message) {
+      const input = document.getElementById('statusPhoneInput');
+      const errorMsg = input.parentElement.querySelector('.error-message');
+      
+      input.classList.add('error');
+      errorMsg.textContent = message;
+      errorMsg.classList.add('show');
+    }
+
+    function clearPhoneError() {
+      const input = document.getElementById('statusPhoneInput');
+      const errorMsg = input.parentElement.querySelector('.error-message');
+      
+      input.classList.remove('error');
+      errorMsg.classList.remove('show');
+    }
+
+    // ฟังก์ชันแสดงข้อมูลการจอง
+    function displayBookingStatus(booking) {
+      const statusContent = document.getElementById('statusContent');
+      
+      const statusClass = getStatusClass(booking.status);
+      const statusText = getStatusText(booking.status);
+      
+      let driverCard = '';
+      if (booking.driverName && booking.driverPhone) {
+        const driverInitial = booking.driverName.charAt(0).toUpperCase();
+        driverCard = `
+          <div class="driver-card">
+            <h4>👨‍✈️ ข้อมูลคนขับ</h4>
+            <div class="driver-info">
+              <div class="driver-avatar">${driverInitial}</div>
+              <div class="driver-details">
+                <h5>${booking.driverName}</h5>
+                <p class="driver-phone">📱 ${booking.driverPhone}</p>
+              </div>
+            </div>
+            <button class="call-driver-btn" onclick="window.open('tel:${booking.driverPhone}')">
+              📞 โทรหาคนขับ
+            </button>
+          </div>
+        `;
+      }
+
+      statusContent.innerHTML = `
+        <div class="status-card">
+          <div class="status-header">
+            <h3>📋 รายละเอียดการจอง</h3>
+            <div class="status-badge ${statusClass}">${statusText}</div>
+          </div>
+          
+          <div class="booking-details">
+            <div class="detail-row">
+              <span class="detail-label">รหัสการจอง</span>
+              <span class="detail-value">${booking.orderId || 'ไม่ระบุ'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">แพกเกจ</span>
+              <span class="detail-value">${getPackageText(booking.package)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">ผู้จอง</span>
+              <span class="detail-value">${booking.customerName}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">ผู้ใช้บริการ</span>
+              <span class="detail-value">${booking.patientName}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">วันที่นัด</span>
+              <span class="detail-value">${booking.appointmentDate}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">เวลานัด</span>
+              <span class="detail-value">${booking.appointmentTime}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">จุดรับ</span>
+              <span class="detail-value">${booking.pickupLocation}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">จุดส่ง</span>
+              <span class="detail-value">${booking.dropLocation}</span>
+            </div>
+            ${booking.pickupNote ? `
+            <div class="detail-row">
+              <span class="detail-label">หมายเหตุ</span>
+              <span class="detail-value">${booking.pickupNote}</span>
+            </div>
+            ` : ''}
+          </div>
+          
+          ${driverCard}
+        </div>
+      `;
+    }
+
+    function displayNoBookingFound() {
+      const statusContent = document.getElementById('statusContent');
+      
+      statusContent.innerHTML = `
+        <div class="status-card">
+          <div class="no-booking">
+            <div class="no-booking-icon">🔍</div>
+            <h3>ไม่พบข้อมูลการจอง</h3>
+            <p>กรุณาตรวจสอบเบอร์โทรศัพท์ที่กรอก<br>หรือติดต่อเจ้าหน้าที่</p>
+            <button class="check-status-btn" onclick="showStatusCheck()" style="margin-top: 30px; position: relative; max-width: none;">
+              ลองอีกครั้ง
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Helper functions
+    function getStatusClass(status) {
+      const statusMap = {
+        'รอดำเนินการ': 'status-confirmed',
+        'กำหนดคนขับแล้ว': 'status-assigned',
+        'กำลังให้บริการ': 'status-in-progress',
+        'เสร็จสิ้น': 'status-completed',
+        'ยกเลิก': 'status-cancelled'
+      };
+      return statusMap[status] || 'status-confirmed';
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        'รอดำเนินการ': '✅ ยืนยันแล้ว',
+        'กำหนดคนขับแล้ว': '👨‍✈️ จัดคนขับแล้ว',
+        'กำลังให้บริการ': '🚗 กำลังให้บริการ',
+        'เสร็จสิ้น': '✅ เสร็จสิ้น',
+        'ยกเลิก': '❌ ยกเลิก'
+      };
+      return statusMap[status] || status;
+    }
+
+    function getPackageText(package) {
+      const packageMap = {
+        'package1': 'หลานขับ + หลานแคร์ 6 ชม.',
+        'package2': 'หลานแคร์ 6 ชม.',
+        'package3': 'หลานขับ รอรับ-ส่ง 8 ชม.'
+      };
+      return packageMap[package] || package;
+    }
+
+    // Initialize date/time pickers
+    flatpickr("#appointmentDate", {
+      dateFormat: "d/m/Y",
+      minDate: "today",
+      locale: "th",
+      allowInput: false
+    });
+    
+    flatpickr("#appointmentTime", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      allowInput: false
+    });
+
+    // File input handling
+    document.getElementById('appointmentFile').addEventListener('change', function(e) {
+      const label = document.querySelector('.file-input-label');
+      const fileName = e.target.files[0]?.name;
+      if (fileName) {
+        label.innerHTML = `📎 ${fileName}<br><small>ไฟล์ถูกเลือกแล้ว</small>`;
+        label.style.borderColor = '#10b981';
+        label.style.background = '#f0fdf4';
+      }
+    });
+
+    // Form validation
+    function validateForm(formData) {
+      const errors = {};
+      const requiredFields = ['package', 'customerName', 'customerPhone', 'relation', 'patientName', 'patientAge', 'patientGender', 'pickupLocation', 'dropLocation', 'appointmentDate', 'appointmentTime'];
+      
+      requiredFields.forEach(field => {
+        const value = formData.get(field);
+        if (!value || value.trim() === '') {
+          errors[field] = true;
+        }
+      });
+
+      // Phone validation
+      const phone = formData.get('customerPhone');
+      if (phone && !/^[0-9]{9,10}$/.test(phone.replace(/[^0-9]/g, ''))) {
+        errors.customerPhone = true;
+      }
+
+      return errors;
+    }
+
+    function showErrors(errors) {
+      // Clear previous errors
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      document.querySelectorAll('.error-message.show').forEach(el => el.classList.remove('show'));
+
+      // Show new errors
+      Object.keys(errors).forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        const errorMsg = input?.parentElement?.querySelector('.error-message');
+        if (input) {
+          input.classList.add('error');
+          if (errorMsg) errorMsg.classList.add('show');
+        }
+      });
+
+      // Scroll to first error
+      const firstError = document.querySelector('.error');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Form submission
+    document.getElementById("actualBookingForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const errors = validateForm(formData);
+      
+      if (Object.keys(errors).length > 0) {
+        showErrors(errors);
+        return;
+      }
+
+      const orderId = generateOrderId();
+      document.getElementById("orderId").value = orderId;
+      formData.set('orderId', orderId);
+
+      const submitBtn = document.querySelector('.submit-btn');
+      const originalText = submitBtn.textContent;
+      
+      // Show loading state
+      submitBtn.textContent = 'กำลังส่งข้อมูล...';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+
+      // แปลง FormData เป็น URLSearchParams
+      const params = new URLSearchParams();
+      for (const [key, value] of formData.entries()) {
+        if (key !== 'appointmentFile') { // ข้ามไฟล์ในตอนนี้
+          params.append(key, value);
+        }
+      }
+
+      // ส่งข้อมูลไป Google Apps Script
+      fetch(CONFIG.BOOKING_SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+        redirect: 'follow'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        
+        if (data.status === 'success') {
+          // แสดงหน้า success
+          hideAllSections();
+          document.getElementById("showOrderId").textContent = `รหัสการจอง: ${orderId}`;
+          document.getElementById("successMessage").classList.add('show');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          
+          // Reset form
+          document.getElementById("actualBookingForm").reset();
+        } else {
+          throw new Error(data.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert(`เกิดข้อผิดพลาด: ${error.message}\n\nกรุณาลองใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่`);
+        
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      });
+    });
+
+    // Auto-hide errors on input
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+      input.addEventListener('input', function() {
+        this.classList.remove('error');
+        const errorMsg = this.parentElement?.querySelector('.error-message');
+        if (errorMsg) errorMsg.classList.remove('show');
+      });
+    });
+
+    // Clear phone error when typing
+    document.getElementById('statusPhoneInput').addEventListener('input', clearPhoneError);
+
+    // Improve mobile experience
+    document.addEventListener('DOMContentLoaded', function() {
+      // Force prevent zoom on ALL mobile devices
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      }
+      
+      // Additional zoom prevention for iOS Safari
+      document.addEventListener('touchstart', function(e) {
+        if (e.touches && e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+      
+      // Prevent double-tap zoom
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(e) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+      
+      // Improve keyboard handling
+      const inputs = document.querySelectorAll('input, select, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          setTimeout(() => {
+            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+        });
+        
+        input.addEventListener('touchstart', function(e) {
+          this.style.fontSize = '18px';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -43,38 +43,36 @@
     }
 
     
-    /* ปุ่มตรวจสอบสถานะที่ banner */
+/* ปุ่มตรวจสอบสถานะใต้หัวข้อ */
     .status-btn-header {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.2);
-      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.25);
       color: white;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Prompt', sans-serif;
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      z-index: 10;
+      margin-top: 15px;
     }
 
     .status-btn-header:hover {
-      background: rgba(255,255,255,0.25);
-      border-color: rgba(255,255,255,0.5);
-      transform: translateY(-50%) scale(1.05);
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+      transform: scale(1.05);
     }
 
     .status-btn-header:active {
-      transform: translateY(-50%) scale(0.95);
+      transform: scale(0.95);
     }
+    
     /* หน้าแรก - แสดงแพกเกจ 3 กล่อง */
     .landing-section {
       padding: 30px 20px 40px 20px;

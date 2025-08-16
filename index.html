@@ -31,7 +31,7 @@
       overflow-x: hidden;
     }
 
-    .header { 
+.header { 
       background: linear-gradient(135deg, #113a69, #1e5a96); 
       color: white; 
       text-align: center; 
@@ -40,15 +40,15 @@
       font-weight: 700; 
       box-shadow: 0 2px 10px rgba(17,58,105,0.2);
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .header-title {
       line-height: 1.2;
-      margin-bottom: 15px;
+      margin: 0 auto 20px auto;
+      display: block;
+      width: 100%;
     }
 
     /* ปุ่มตรวจสอบสถานะใต้หัวข้อ */
@@ -65,13 +65,17 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      display: block;
       margin: 0 auto;
       position: relative;
       min-height: 48px;
+      text-align: center;
+      width: auto;
+      max-width: 200px;
+    }
+
+    .status-btn-header span {
+      margin-left: 8px;
     }
     
     /* หน้าแรก - แสดงแพกเกจ 3 กล่อง */

@@ -1241,6 +1241,7 @@
           
           <div class="booking-details">
             <div class="detail-row">
+           <div class="detail-row">
               <span class="detail-label">รหัสการจอง</span>
               <span class="detail-value">${booking.orderId || 'ไม่ระบุ'}</span>
             </div>
@@ -1261,6 +1262,20 @@
               <span class="detail-value">${booking.patientName}</span>
             </div>
             <div class="detail-row">
+              <span class="detail-label">อายุ</span>
+              <span class="detail-value">${booking.patientAge} ปี</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">เพศ</span>
+              <span class="detail-value">${booking.patientGender}</span>
+            </div>
+            ${booking.patientHealth && booking.patientHealth !== 'ไม่มี' ? `
+            <div class="detail-row">
+              <span class="detail-label">โรคประจำตัว</span>
+              <span class="detail-value">${booking.patientHealth}</span>
+            </div>
+            ` : ''}
+            <div class="detail-row">
               <span class="detail-label">วันที่นัด</span>
               <span class="detail-value">${booking.appointmentDate}</span>
             </div>
@@ -1276,7 +1291,7 @@
               <span class="detail-label">จุดส่ง</span>
               <span class="detail-value">${booking.dropLocation}</span>
             </div>
-            ${booking.pickupNote ? `
+            ${booking.pickupNote && booking.pickupNote !== 'ไม่มี' ? `
             <div class="detail-row">
               <span class="detail-label">หมายเหตุ</span>
               <span class="detail-value">${booking.pickupNote}</span>
